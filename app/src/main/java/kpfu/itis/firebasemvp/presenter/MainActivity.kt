@@ -3,13 +3,18 @@ package kpfu.itis.firebasemvp.presenter
 import android.os.Bundle
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
+import kpfu.itis.firebasemvp.navigation.Screens
 import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import moxy.MvpAppCompatActivity
 import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 class MainActivity : MvpAppCompatActivity() {
+
+    @Inject
+    lateinit var router : Router
 
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
@@ -18,12 +23,7 @@ class MainActivity : MvpAppCompatActivity() {
         Injector.appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().apply {
-                add(R.id.container_main, SignInFragment.newInstance())
-                commit()
-            }
-        }
+        router.newRootScreen(Screens.SignInScreen)
     }
 
     private val navigator = object : SupportAppNavigator(this, R.id.container_main) {}
