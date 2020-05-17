@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">firebasemvp</string>
+    <string name="user_not_found">User not found</string>
+    <string name="user_exist">Email exist yet</string>
+    <string name="web_client_id">897530665175-82o1ajhge0h43pmft2lsmebigkvc41m1.apps.googleusercontent.com</string>
+    <string name="def_url">https://cmates.blob.core.windows.net/cmmaterial/material_18_4_25_rqyps.jpeg</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7281450262111610~2801286068</string>
+</resources>
