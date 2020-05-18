@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@+id/nav_sign_in">
+
+    <fragment
+        android:id="@+id/nav_sign_in"
+        android:name="kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment"
+        android:label="SignInFragment">
+        <action
+            android:id="@+id/action_nav_sign_in_to_nav_list"
+            app:destination="@id/nav_list"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_sign_in_to_nav_registration"
+            app:destination="@id/nav_registration"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_sign_in_to_nav_tel"
+            app:destination="@id/nav_tel"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_nav_sign_in_to_nav_forgot"
+            app:destination="@id/nav_forgot"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_nav_sign_in_to_navActivity"
+            app:destination="@id/navActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_list"
+        android:name="kpfu.itis.firebasemvp.presenter.list.list.ListFragment"
+        android:label="ListFragment" >
+
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue="-1"/>
+
+        <action
+            android:id="@+id/action_nav_list_to_nav_dialog"
+            app:destination="@id/nav_dialog"
+            app:popUpTo="@id/nav_list"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nav_forgot"
+        android:name="kpfu.itis.firebasemvp.presenter.auth.forgot_pass.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment" >
+        <action
+            android:id="@+id/action_nav_forgot_to_nav_list"
+            app:destination="@id/nav_list"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nav_registration"
+        android:name="kpfu.itis.firebasemvp.presenter.auth.registration.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_nav_registration_to_nav_sign_in"
+            app:destination="@id/nav_sign_in"
+            app:popUpTo="@id/nav_sign_in"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nav_tel"
+        android:name="kpfu.itis.firebasemvp.presenter.auth.telephone.TelephoneFragment"
+        android:label="TelephoneFragment" >
+        <action
+            android:id="@+id/action_nav_tel_to_nav_list"
+            app:destination="@id/nav_list" />
+    </fragment>
+    <dialog
+        android:id="@+id/nav_dialog"
+        android:name="kpfu.itis.firebasemvp.presenter.list.dialog.AnimeDialog"
+        android:label="AnimeDialog" />
+    <activity
+        android:id="@+id/navActivity"
+        android:name="kpfu.itis.firebasemvp.presenter.nav_ui.NavActivity"
+        android:label="NavActivity" />
+
+</navigation>
