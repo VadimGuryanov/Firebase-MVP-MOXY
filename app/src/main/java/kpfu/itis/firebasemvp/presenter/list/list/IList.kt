@@ -1,7 +1,6 @@
 package kpfu.itis.firebasemvp.presenter.list.list
 
 import kpfu.itis.firebasemvp.presenter.list.data.model.Anime
-import kpfu.itis.firebasemvp.presenter.list.list.recycler.AnimeListAdapter
 import moxy.MvpView
 import moxy.viewstate.strategy.SkipStrategy
 import moxy.viewstate.strategy.StateStrategyType
@@ -19,4 +18,5 @@ interface IList : MvpView {
     fun update(newList: List<Anime>)
 
     fun refresh()
+
 }

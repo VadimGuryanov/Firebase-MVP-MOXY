@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_list.*
 import kpfu.itis.firebasemvp.R
@@ -22,7 +21,6 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
-
 
 class ListFragment : MvpAppCompatFragment(), IList {
 
@@ -52,14 +50,13 @@ class ListFragment : MvpAppCompatFragment(), IList {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var root = inflater.inflate(R.layout.fragment_list, container, false)
-
-        var mAdView = activity?.findViewById<AdView>(R.id.adView)
+        val root = inflater.inflate(R.layout.fragment_list, container, false)
+        val mAdView = activity?.findViewById<AdView>(R.id.adView)
         val adRequest: AdRequest = AdRequest.Builder().build()
         mAdView?.loadAd(adRequest)
 
         (activity as MainActivity).apply {
-            var toolbar = findViewById<Toolbar>(R.id.toolbar_action)
+            val toolbar = findViewById<Toolbar>(R.id.toolbar_action)
             setSupportActionBar(toolbar)
             manager = supportFragmentManager
         }
@@ -80,12 +77,8 @@ class ListFragment : MvpAppCompatFragment(), IList {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.tb_crash -> {
-               throw Exception()
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+            R.id.tb_crash -> throw IllegalAccessException()
+            else -> super.onOptionsItemSelected(item)
         }
 
     override fun initListAdapter(data: List<Anime>) {
@@ -110,9 +103,14 @@ class ListFragment : MvpAppCompatFragment(), IList {
         sr_list.isRefreshing = false
     }
 
+    override fun onDestroy() {
+        Injector.clearListComponent()
+        super.onDestroy()
+    }
+
     private fun initListener() {
         fab_add_anime.setOnClickListener {
-            var bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, id)
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
             AnimeDialog.show(manager)

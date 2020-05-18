@@ -18,10 +18,6 @@ import kotlinx.android.synthetic.main.fragment_signin.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
 import kpfu.itis.firebasemvp.navigation.Screens
-import kpfu.itis.firebasemvp.presenter.auth.forgot_pass.ForgotPasswordFragment
-import kpfu.itis.firebasemvp.presenter.auth.registration.RegistrationFragment
-import kpfu.itis.firebasemvp.presenter.auth.telephone.TelephoneFragment
-import kpfu.itis.firebasemvp.presenter.list.list.ListFragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -112,7 +108,7 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
         btn_google.setOnClickListener { presenter.signInGoogle() }
         btn_tel_auth.setOnClickListener { presenter.navigateTo(Screens.TelephoneScreen) }
         tv_forgot.setOnClickListener {
-            var bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, et_sign_in_email.text.toString())
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
             presenter.navigateTo(Screens.ForgotPassScreen)
@@ -121,6 +117,11 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
 
     override fun onConnectionFailed(p0: ConnectionResult) {
         showToast("Google Play Services error.")
+    }
+
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
     }
 
     companion object {

@@ -1,10 +1,7 @@
 package kpfu.itis.firebasemvp.di
 
-import android.content.Context
 import kpfu.itis.firebasemvp.presenter.App
-import kpfu.itis.firebasemvp.presenter.MainActivity
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthComponent
-import kpfu.itis.firebasemvp.presenter.auth.di.AuthModule
 import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import kpfu.itis.firebasemvp.presenter.list.di.ListComponent
 

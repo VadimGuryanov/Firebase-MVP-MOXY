@@ -9,8 +9,8 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 interface ITelephoneSignIn : MvpView {
 
     fun signIn()
-    fun showError(mess : String)
+    fun showError(mess : String?)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showToast(mess: String)
+    fun showToast(mess: String?)
 }

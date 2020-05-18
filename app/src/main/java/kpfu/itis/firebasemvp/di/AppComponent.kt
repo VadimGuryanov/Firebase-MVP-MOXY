@@ -25,4 +25,5 @@ interface AppComponent {
     fun plusAuthComponent() : AuthComponent.Builder
     fun plusListComponent() : ListComponent.Builder
     fun inject(mainActivity: MainActivity)
+
 }

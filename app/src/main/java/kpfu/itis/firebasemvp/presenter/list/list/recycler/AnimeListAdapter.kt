@@ -1,13 +1,10 @@
 package kpfu.itis.firebasemvp.presenter.list.list.recycler
 
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import kpfu.itis.firebasemvp.presenter.list.data.model.Anime
-import kotlin.math.log
 
 class AnimeListAdapter (
     private var dataSource: List<Anime>,

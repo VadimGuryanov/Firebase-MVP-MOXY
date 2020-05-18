@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     compileSdkVersion 29
@@ -30,6 +31,18 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+}
+
+detekt {
+    failFast = true
+    buildUponDefaultConfig = true
+    config = files("$rootDir/config/detekt/detekt.yml")
+
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        txt.enabled = false
+    }
 }
 
 ext {

@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_registration.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
-import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
-
 
 class RegistrationFragment : MvpAppCompatFragment(), IRegistrationView {
 
@@ -69,6 +67,11 @@ class RegistrationFragment : MvpAppCompatFragment(), IRegistrationView {
 
     override fun applyRetrievedLengthLimit(length: Int) {
         et_sign_up_pass.filters = arrayOf(InputFilter.LengthFilter(length))
+    }
+
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
     }
 
     private fun initListener() {

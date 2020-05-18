@@ -4,11 +4,9 @@ import android.util.Log
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.toMaybe
 import kpfu.itis.firebasemvp.navigation.Screens
 import kpfu.itis.firebasemvp.presenter.auth.data.AuthRepository
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthScope
-import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.terrakok.cicerone.Router

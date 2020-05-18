@@ -1,7 +1,6 @@
 package kpfu.itis.firebasemvp.presenter.auth.signin
 
 import android.util.Log
-import androidx.fragment.app.Fragment
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.GoogleApiClient
@@ -9,7 +8,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-import kpfu.itis.firebasemvp.di.Injector
 import kpfu.itis.firebasemvp.navigation.Screens
 import kpfu.itis.firebasemvp.presenter.auth.data.AuthRepository
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthScope

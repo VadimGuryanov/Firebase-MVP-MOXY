@@ -6,9 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import kpfu.itis.firebasemvp.presenter.list.data.AnimeRepository
-import kpfu.itis.firebasemvp.presenter.list.data.model.Anime
 import kpfu.itis.firebasemvp.presenter.list.di.AnimeListScope
-import kpfu.itis.firebasemvp.presenter.list.list.recycler.AnimeListAdapter
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
@@ -19,7 +17,7 @@ class ListPresenter @Inject constructor(
     private var repository: AnimeRepository
 ) : MvpPresenter<IList>() {
 
-    private lateinit var disposable: Disposable
+    private var disposable: Disposable? = null
 
     fun getData() {
         disposable = repository.getData()
@@ -48,7 +46,7 @@ class ListPresenter @Inject constructor(
     }
 
     override fun onDestroy() {
-        disposable.dispose()
+        disposable?.dispose()
     }
 
     fun download(image: ImageView, url: String) {

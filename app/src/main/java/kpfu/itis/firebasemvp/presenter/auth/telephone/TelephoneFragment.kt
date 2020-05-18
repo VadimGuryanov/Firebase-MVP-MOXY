@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_tel.*
-import kpfu.itis.firebasemvp.presenter.list.list.ListFragment
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
 import moxy.MvpAppCompatFragment
@@ -58,12 +57,12 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
         initListener()
     }
 
-    override fun showError(mess: String) {
-        ti_tel.error = mess
+    override fun showError(mess: String?) {
+        ti_tel.error = mess ?: getString(R.string.phone_error)
     }
 
-    override fun showToast(mess: String) {
-        Toast.makeText(activity, mess, Toast.LENGTH_SHORT).show()
+    override fun showToast(mess: String?) {
+        Toast.makeText(activity, mess ?: getString(R.string.phone_error), Toast.LENGTH_SHORT).show()
     }
 
     override fun signIn() {
@@ -82,11 +81,14 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
         }
     }
 
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
+    }
+
     companion object {
 
         fun newInstance(): TelephoneFragment = TelephoneFragment()
     }
-
-
 
 }

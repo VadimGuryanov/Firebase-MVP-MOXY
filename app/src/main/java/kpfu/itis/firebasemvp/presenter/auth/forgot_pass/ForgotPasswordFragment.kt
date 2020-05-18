@@ -68,6 +68,11 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), IForgotPassword {
         ti_email.visibility = View.GONE
     }
 
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
+    }
+
     private fun initListener() {
         btn_reset.setOnClickListener {
             presenter.resetPass(et_email.text.toString())

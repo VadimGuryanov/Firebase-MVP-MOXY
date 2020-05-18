@@ -4,7 +4,6 @@ import android.os.Bundle
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
 import kpfu.itis.firebasemvp.navigation.Screens
-import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import moxy.MvpAppCompatActivity
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
