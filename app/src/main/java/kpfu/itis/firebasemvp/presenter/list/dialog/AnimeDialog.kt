@@ -36,7 +36,7 @@ class AnimeDialog : MvpAppCompatDialogFragment(), IDialog {
         dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_anime, null, false)
         val dialog = AlertDialog.Builder(
             ContextThemeWrapper(
-                checkNotNull(context),
+                requireContext(),
                 R.style.ThemeOverlay_MaterialComponents
             )
         )
