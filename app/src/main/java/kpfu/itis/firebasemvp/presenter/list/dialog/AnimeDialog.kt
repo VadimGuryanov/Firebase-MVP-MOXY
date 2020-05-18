@@ -5,15 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.FragmentManager
-import kotlinx.android.synthetic.main.dialog_anime.*
 import kotlinx.android.synthetic.main.dialog_anime.view.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
-import kpfu.itis.firebasemvp.presenter.list.data.model.Anime
 import moxy.MvpAppCompatDialogFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -56,8 +53,13 @@ class AnimeDialog : MvpAppCompatDialogFragment(), IDialog {
         return dialog
     }
 
-    override fun showError(mess: String) {
-        dialogView?.et_name?.error = mess
+    override fun showError(mess: String?) {
+        dialogView?.et_name?.error = mess ?: getString(R.string.error)
+    }
+
+    override fun onDestroy() {
+        Injector.clearListComponent()
+        super.onDestroy()
     }
 
     companion object {

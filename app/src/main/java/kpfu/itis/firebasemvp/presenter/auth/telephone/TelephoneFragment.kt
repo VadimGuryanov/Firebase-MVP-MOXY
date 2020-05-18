@@ -7,8 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_tel.*
-import kpfu.itis.firebasemvp.presenter.list.list.ListFragment
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
 import moxy.MvpAppCompatFragment
@@ -25,6 +26,8 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
         presenterProvider.get()
     }
 
+    private var navigator: NavController? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Injector.plusAuthComponent().inject(this)
         super.onCreate(savedInstanceState)
@@ -34,7 +37,11 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_tel, container, false)
+    ): View? {
+        val root = inflater.inflate(R.layout.fragment_tel, container, false)
+        navigator = activity?.findNavController(R.id.nav_host_main_fragment)
+        return root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,16 +65,22 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
         initListener()
     }
 
-    override fun showError(mess: String) {
-        ti_tel.error = mess
+    override fun showError(mess: String?) {
+        ti_tel.error = mess ?: getString(R.string.phone_error)
     }
 
-    override fun showToast(mess: String) {
-        Toast.makeText(activity, mess, Toast.LENGTH_SHORT).show()
+    override fun showToast(mess: String?) {
+        Toast.makeText(activity, mess ?: getString(R.string.phone_error), Toast.LENGTH_SHORT).show()
     }
 
-    override fun signIn() {
+    override fun navigateTo(id: String) {
+        val action = TelephoneFragmentDirections.actionNavTelToNavList(id)
+        navigator?.navigate(action)
+    }
 
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
     }
 
     private fun initListener() {
@@ -81,12 +94,5 @@ class TelephoneFragment : MvpAppCompatFragment(), ITelephoneSignIn {
             presenter.getRepeat(et_tel.text.toString())
         }
     }
-
-    companion object {
-
-        fun newInstance(): TelephoneFragment = TelephoneFragment()
-    }
-
-
 
 }

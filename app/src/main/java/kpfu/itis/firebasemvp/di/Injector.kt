@@ -1,16 +1,13 @@
 package kpfu.itis.firebasemvp.di
 
-import android.content.Context
 import kpfu.itis.firebasemvp.presenter.App
-import kpfu.itis.firebasemvp.presenter.MainActivity
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthComponent
-import kpfu.itis.firebasemvp.presenter.auth.di.AuthModule
 import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import kpfu.itis.firebasemvp.presenter.list.di.ListComponent
 
 object Injector {
 
-    lateinit var appComponent: AppComponent
+    private lateinit var appComponent: AppComponent
     private var authComponent: AuthComponent? = null
     private var listComponent: ListComponent? = null
 
@@ -49,8 +46,5 @@ object Injector {
     fun clearListComponent() {
         listComponent = null
     }
-
-
-
 
 }

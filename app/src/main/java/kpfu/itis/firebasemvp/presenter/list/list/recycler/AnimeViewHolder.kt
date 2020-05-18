@@ -36,15 +36,12 @@ class AnimeViewHolder(
     }
 
     fun updateFromBundle(bundle: Bundle?) {
-        bundle?.apply {
-           bind(
-               Anime(
-                   getString(KEY_NAME) ?: "empty",
-                   getString(KEY_PHOTO_URL) ?: ""
-               )
+       bind(
+           Anime(
+               bundle?.getString(KEY_NAME) ?: "empty",
+               bundle?.getString(KEY_PHOTO_URL) ?: ""
            )
-        }
+       )
     }
-
 
 }

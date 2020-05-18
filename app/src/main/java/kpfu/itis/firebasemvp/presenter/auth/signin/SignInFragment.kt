@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.ApiException
@@ -17,11 +18,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_signin.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
-import kpfu.itis.firebasemvp.navigation.Screens
-import kpfu.itis.firebasemvp.presenter.auth.forgot_pass.ForgotPasswordFragment
-import kpfu.itis.firebasemvp.presenter.auth.registration.RegistrationFragment
-import kpfu.itis.firebasemvp.presenter.auth.telephone.TelephoneFragment
-import kpfu.itis.firebasemvp.presenter.list.list.ListFragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -48,8 +44,7 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_signin, container, false)
-
+    ): View?  = inflater.inflate(R.layout.fragment_signin, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,6 +68,11 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
         initListener()
     }
 
+    override fun navigateTo(id: String) {
+        val action = SignInFragmentDirections.actionNavSignInToNavList(id)
+        findNavController().navigate(action)
+    }
+
     override fun showError(mess: String) {
         ti_sign_in_email.error = mess
     }
@@ -94,10 +94,10 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
                 task.getResult(ApiException::class.java)?.let {
                     presenter.firebaseAuthWithGoogle(it)
                 } ?: run {
-                    Toast.makeText(activity, "Sign in error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, getString(R.string.sign_error), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: ApiException) {
-                Toast.makeText(activity, e.message ?: "Sing in error", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, e.message ?: getString(R.string.sign_error), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -107,15 +107,20 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
             presenter.signIn(et_sign_in_email.text.toString(), et_sign_in_pass.text.toString())
         }
         tv_registration.setOnClickListener {
-            presenter.navigateTo(Screens.RegistrationScreen)
+            findNavController().navigate(R.id.action_nav_sign_in_to_nav_registration)
         }
         btn_google.setOnClickListener { presenter.signInGoogle() }
-        btn_tel_auth.setOnClickListener { presenter.navigateTo(Screens.TelephoneScreen) }
+        btn_tel_auth.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_sign_in_to_nav_tel)
+        }
         tv_forgot.setOnClickListener {
-            var bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, et_sign_in_email.text.toString())
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
-            presenter.navigateTo(Screens.ForgotPassScreen)
+            findNavController().navigate(R.id.action_nav_sign_in_to_nav_forgot)
+        }
+        tv_to_bnv.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_sign_in_to_navActivity)
         }
     }
 
@@ -123,10 +128,12 @@ class SignInFragment : MvpAppCompatFragment(), ISingInView, GoogleApiClient.OnCo
         showToast("Google Play Services error.")
     }
 
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
+    }
+
     companion object {
-
         private const val RC_SIGN_IN = 9001
-
-        fun newInstance(): SignInFragment = SignInFragment()
     }
 }

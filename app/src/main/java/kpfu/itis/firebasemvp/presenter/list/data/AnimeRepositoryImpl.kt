@@ -2,7 +2,6 @@ package kpfu.itis.firebasemvp.presenter.list.data
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import io.reactivex.Completable
 import io.reactivex.Single
 import kpfu.itis.firebasemvp.presenter.list.data.model.Anime
 import java.util.*
@@ -41,4 +40,5 @@ class AnimeRepositoryImpl @Inject constructor(
 
     private fun mapper(map: Map<String, Any>) : Anime =
             Anime(map["name"].toString(), map["photoUrl"].toString())
+
 }

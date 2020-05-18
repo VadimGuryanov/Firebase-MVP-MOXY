@@ -1,7 +1,5 @@
 package kpfu.itis.firebasemvp.presenter.list.di
 
-import android.content.Context
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import dagger.Module
@@ -24,6 +22,5 @@ class ListModule {
     @AnimeListScope
     fun provideAnimeRepository(firebaseFirestore : FirebaseFirestore) : AnimeRepository =
         AnimeRepositoryImpl(firebaseFirestore)
-
 
 }

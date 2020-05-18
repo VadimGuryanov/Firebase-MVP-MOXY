@@ -5,4 +5,11 @@
     <string name="web_client_id">897530665175-82o1ajhge0h43pmft2lsmebigkvc41m1.apps.googleusercontent.com</string>
     <string name="def_url">https://cmates.blob.core.windows.net/cmmaterial/material_18_4_25_rqyps.jpeg</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-7281450262111610~2801286068</string>
+    <string name="title_activity_nav">NavActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="phone_error">Phone auth error</string>
+    <string name="error">Error</string>
+    <string name="sign_error">Sign in error</string>
 </resources>

@@ -7,15 +7,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_registration.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
-import kpfu.itis.firebasemvp.presenter.auth.signin.SignInFragment
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
-
 
 class RegistrationFragment : MvpAppCompatFragment(), IRegistrationView {
 
@@ -67,20 +66,23 @@ class RegistrationFragment : MvpAppCompatFragment(), IRegistrationView {
         ti_sign_up_email.error = error
     }
 
+    override fun navigateTo() {
+        findNavController().navigate(R.id.action_nav_registration_to_nav_sign_in)
+    }
+
     override fun applyRetrievedLengthLimit(length: Int) {
         et_sign_up_pass.filters = arrayOf(InputFilter.LengthFilter(length))
+    }
+
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
     }
 
     private fun initListener() {
         btn_registration.setOnClickListener {
             presenter.signUp(et_sign_up_email.text.toString(), et_sign_up_pass.text.toString())
-            presenter.fetch()
         }
-    }
-
-    companion object {
-        fun newInstance(): RegistrationFragment =
-            RegistrationFragment()
     }
 
 }

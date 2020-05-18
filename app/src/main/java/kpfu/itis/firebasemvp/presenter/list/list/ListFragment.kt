@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.fragment_list.*
 import kpfu.itis.firebasemvp.R
@@ -23,7 +21,6 @@ import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
-
 class ListFragment : MvpAppCompatFragment(), IList {
 
     @Inject
@@ -36,8 +33,7 @@ class ListFragment : MvpAppCompatFragment(), IList {
     @Inject
     lateinit var firebaseAnalytics : FirebaseAnalytics
 
-    private lateinit var manager : FragmentManager
-    private lateinit var animeListAdapter: AnimeListAdapter
+    private var animeListAdapter: AnimeListAdapter? = null
     private var id: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,23 +48,21 @@ class ListFragment : MvpAppCompatFragment(), IList {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var root = inflater.inflate(R.layout.fragment_list, container, false)
-
-        var mAdView = activity?.findViewById<AdView>(R.id.adView)
+        val root = inflater.inflate(R.layout.fragment_list, container, false)
+        val mAdView = activity?.findViewById<AdView>(R.id.adView)
         val adRequest: AdRequest = AdRequest.Builder().build()
         mAdView?.loadAd(adRequest)
-
         (activity as MainActivity).apply {
-            var toolbar = findViewById<Toolbar>(R.id.toolbar_action)
+            val toolbar = findViewById<Toolbar>(R.id.toolbar_action)
             setSupportActionBar(toolbar)
-            manager = supportFragmentManager
         }
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        id = arguments?.getString(ARG_ID)
+        val saveArgs = ListFragmentArgs.fromBundle(arguments ?: Bundle())
+        id = saveArgs.id
         presenter.getData()
         initListener()
     }
@@ -80,12 +74,8 @@ class ListFragment : MvpAppCompatFragment(), IList {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
-            R.id.tb_crash -> {
-               throw Exception()
-            }
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+            R.id.tb_crash -> throw IllegalAccessException()
+            else -> super.onOptionsItemSelected(item)
         }
 
     override fun initListAdapter(data: List<Anime>) {
@@ -103,19 +93,24 @@ class ListFragment : MvpAppCompatFragment(), IList {
     }
 
     override fun update(newList: List<Anime>) {
-        animeListAdapter.update(newList)
+        animeListAdapter?.update(newList)
     }
 
     override fun refresh() {
         sr_list.isRefreshing = false
     }
 
+    override fun onDestroy() {
+        Injector.clearListComponent()
+        super.onDestroy()
+    }
+
     private fun initListener() {
         fab_add_anime.setOnClickListener {
-            var bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString(FirebaseAnalytics.Param.VALUE, id)
             firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
-            AnimeDialog.show(manager)
+            AnimeDialog.show((activity as MainActivity).supportFragmentManager)
         }
         sr_list.setOnRefreshListener {
             presenter.update()
@@ -126,13 +121,9 @@ class ListFragment : MvpAppCompatFragment(), IList {
 
         private const val ARG_ID = "id"
 
-        fun newInstance(id: String) : ListFragment =
-            ListFragment().apply {
-                Bundle().apply {
-                    putString(ARG_ID, id)
-                    arguments = this
-                }
-            }
+        fun bundleArgs(id: String = "") = Bundle().apply {
+            putString(ARG_ID, id)
+        }
 
     }
 

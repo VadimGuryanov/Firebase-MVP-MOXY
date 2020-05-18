@@ -23,7 +23,7 @@ class AnimePresenter @Inject constructor(
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {},
-                onError = {viewState.showError(it.message ?: "Error")}
+                onError = {viewState.showError(it.message)}
             )
     }
 

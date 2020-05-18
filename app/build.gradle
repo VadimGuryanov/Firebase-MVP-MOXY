@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     compileSdkVersion 29
@@ -30,6 +32,26 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+// To inline the bytecode built with JVM target 1.8 into
+// bytecode that is being built with JVM target 1.6. (e.g. navArgs)
+
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+}
+
+detekt {
+    failFast = true
+    buildUponDefaultConfig = true
+    config = files("$rootDir/config/detekt/detekt.yml")
+
+    reports {
+        html.enabled = true
+        xml.enabled = false
+        txt.enabled = false
+    }
 }
 
 ext {
@@ -82,6 +104,11 @@ dependencies {
     implementation "com.github.moxy-community:moxy:2.1.1"
     implementation "com.github.moxy-community:moxy-androidx:2.1.1"
     implementation "com.github.moxy-community:moxy-ktx:2.1.1"
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
     kapt "com.github.moxy-community:moxy-compiler:2.1.1"
 
     //Dagger

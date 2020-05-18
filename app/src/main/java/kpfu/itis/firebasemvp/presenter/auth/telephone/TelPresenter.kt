@@ -1,6 +1,5 @@
 package kpfu.itis.firebasemvp.presenter.auth.telephone
 
-import android.util.Log
 import com.google.android.gms.tasks.TaskExecutors
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.PhoneAuthCredential
@@ -8,12 +7,10 @@ import com.google.firebase.auth.PhoneAuthProvider
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-import kpfu.itis.firebasemvp.navigation.Screens
 import kpfu.itis.firebasemvp.presenter.auth.data.AuthRepository
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthScope
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import ru.terrakok.cicerone.Router
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -21,18 +18,21 @@ import javax.inject.Inject
 @InjectViewState
 class TelPresenter @Inject constructor(
     private var phoneAuthProvider: PhoneAuthProvider,
-    private var repository: AuthRepository,
-    private var router: Router
+    private var repository: AuthRepository
 ) : MvpPresenter<ITelephoneSignIn>() {
 
-    private var storedVerificationId: String = ""
-    private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+    private var storedVerificationId: String? = null
+    private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
     private var disposable: Disposable? = null
 
     fun getCode(tel: String) {
+        if (tel.isEmpty()) {
+            viewState.showToast("You don't write number phone")
+            return
+        }
         phoneAuthProvider.verifyPhoneNumber(
             tel,
-            60,
+            CONST_TIME,
             TimeUnit.SECONDS,
             TaskExecutors.MAIN_THREAD,
             callback
@@ -40,17 +40,23 @@ class TelPresenter @Inject constructor(
     }
 
     fun getRepeat(tel: String) {
+        if (tel.isEmpty()) {
+            viewState.showToast("You don't write number phone")
+            return
+        }
         resendVerificationCode(tel, resendToken)
     }
 
     fun signIn(code: String) {
-        var credential = PhoneAuthProvider.getCredential(storedVerificationId, code)
-        disposable = repository.googleAuth(credential)
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onSuccess = { router.newRootScreen(Screens.ListScreen(it.uid))},
-                onError = {viewState.showToast(it.message ?: "Phone auth error")}
-            )
+        storedVerificationId?.let {
+            val credential = PhoneAuthProvider.getCredential(it, code)
+            disposable = repository.googleAuth(credential)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = { viewState.navigateTo(it.uid) },
+                    onError = { viewState.showToast(it.message) }
+                )
+        } ?: viewState.showToast("You don't get code")
     }
 
     private val callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -59,17 +65,15 @@ class TelPresenter @Inject constructor(
             disposable = repository.googleAuth(credential)
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                    onSuccess = { router.newRootScreen(Screens.ListScreen(it.uid))},
+                    onSuccess = { viewState.navigateTo(it.uid) },
                     onError = {
-                        Log.e(it::class.java.name, it.message ?: "Phone auth error")
-                        viewState.showError(it.message ?: "Phone auth error")
+                        viewState.showError(it.message)
                     }
                 )
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
-            Log.e(e::class.java.name, e.message ?: "Phone auth error")
-            viewState.showError(e.message ?: "Phone auth error")
+            viewState.showError(e.message)
         }
 
         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
@@ -85,7 +89,7 @@ class TelPresenter @Inject constructor(
     ) {
         phoneAuthProvider.verifyPhoneNumber(
             phoneNumber,
-            60,
+            CONST_TIME,
             TimeUnit.SECONDS,
             TaskExecutors.MAIN_THREAD,
             callback,
@@ -97,6 +101,12 @@ class TelPresenter @Inject constructor(
         if (disposable?.isDisposed == true) {
             disposable?.dispose()
         }
+    }
+
+    companion object {
+
+        private const val CONST_TIME : Long = 60
+
     }
 
 }

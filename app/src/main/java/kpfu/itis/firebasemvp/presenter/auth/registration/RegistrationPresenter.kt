@@ -3,19 +3,16 @@ package kpfu.itis.firebasemvp.presenter.auth.registration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
-import kpfu.itis.firebasemvp.navigation.Screens
 import kpfu.itis.firebasemvp.presenter.auth.data.AuthRepository
 import kpfu.itis.firebasemvp.presenter.auth.di.AuthScope
 import moxy.InjectViewState
 import moxy.MvpPresenter
-import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 @AuthScope
 @InjectViewState
 class RegistrationPresenter @Inject constructor(
-    private var repository: AuthRepository,
-    private var router: Router
+    private var repository: AuthRepository
 ) : MvpPresenter<IRegistrationView>() {
 
     private var disposable : Disposable? = null
@@ -24,7 +21,7 @@ class RegistrationPresenter @Inject constructor(
         disposable = repository.signUpEmail(email, password)
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
-                onComplete = {router.newRootScreen(Screens.SignInScreen)},
+                onComplete = {viewState.navigateTo()},
                 onError = {viewState.showError(it.message.toString())}
             )
     }
@@ -52,4 +49,5 @@ class RegistrationPresenter @Inject constructor(
             disposable?.dispose()
         }
     }
+
 }

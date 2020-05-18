@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_forgot_pass.*
 import kpfu.itis.firebasemvp.R
 import kpfu.itis.firebasemvp.di.Injector
@@ -56,9 +57,9 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), IForgotPassword {
         initListener()
     }
 
-    override fun showError(error: String) {
-        ti_email.error = error
-        ti_pass.error = error
+    override fun showError(error: String?) {
+        ti_email.error = error ?: getString(R.string.error)
+        ti_pass.error = error ?: getString(R.string.error)
     }
 
     override fun visiblePassword() {
@@ -68,6 +69,16 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), IForgotPassword {
         ti_email.visibility = View.GONE
     }
 
+    override fun navigateTo() {
+        val action = ForgotPasswordFragmentDirections.actionNavForgotToNavList()
+        findNavController().navigate(action)
+    }
+
+    override fun onDestroy() {
+        Injector.clearAuthComponent()
+        super.onDestroy()
+    }
+
     private fun initListener() {
         btn_reset.setOnClickListener {
             presenter.resetPass(et_email.text.toString())
@@ -75,10 +86,6 @@ class ForgotPasswordFragment : MvpAppCompatFragment(), IForgotPassword {
         btn_new_pass.setOnClickListener {
             presenter.newPass(et_pass.text.toString())
         }
-    }
-
-    companion object {
-        fun newInstance() : ForgotPasswordFragment = ForgotPasswordFragment()
     }
 
 }
